@@ -33,7 +33,7 @@ class HistoryService extends Services
     
     public function criar()
     {
-        $mustContain = ['titulo', 'tempo_ciclo', 'max_ciclos', 'senha', 'usuario_id'];
+        $mustContain = ['texto', 'titulo', 'tempo_ciclo', 'max_ciclos', 'senha', 'usuario_id'];
         
         if($this->requester == null){
             throw new \Exception("Não é possível criar sem autorização do JWT.");
@@ -42,7 +42,7 @@ class HistoryService extends Services
         $criador = $this->requester->id;
         
         $params = $this->request->getParsedBody();
-        
+        var_dump($params);
         foreach ($params as $key => $value) {
             if(in_array($key, $mustContain)){
                 $value = trim($value);
@@ -54,6 +54,9 @@ class HistoryService extends Services
             }
         }
         
+        if(!isset($params['senha']) || $params['senha'] == "null"){
+            $params['senha'] = null;
+        }
         $params['usuario_id'] = $criador;
         
         if(count($params) != count($mustContain)){

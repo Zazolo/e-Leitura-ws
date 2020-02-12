@@ -80,13 +80,11 @@ class ParagraphService extends \Domain\Services
         if(isset($this->args['id']) && $this->requester != null){
             $idToDelete = $this->args['id'];
             $idRequester = $this->requester->id;
+            $paragraph = $this->repository->get($idToDelete);
             
-            $paragraph = $this->repository->read($idToDelete);
-
             if($paragraph != null){
                 return $this->repository->vote($idToDelete, $idRequester);
             }
-            
             return null;
         }
     }

@@ -34,6 +34,7 @@ class UserService extends Services
                     return null;
                 }
             } else {
+                echo "removeu chave $key";
                 unset($params[$key]);
             }
         }
@@ -44,7 +45,7 @@ class UserService extends Services
             return null;
         }
         
-        $finded = $this->repository->read($params['login']);
+        $finded = $this->repository->readByLogin($params['login']);
         
         if($finded != null) {
             throw new \Exception("Login já foi cadastrado!");

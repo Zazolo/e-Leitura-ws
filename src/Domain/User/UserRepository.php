@@ -61,8 +61,28 @@ class UserRepository extends Repository
         return $usuario;
     }
     
+    public function readByLogin(string $login){
+        $usuario = R::findOne('usuario', 'login = ?', [$login]);
+        if($usuario == null){
+            return null;
+        }
+        $usuario = $usuario->export();
+        unset($usuario['senha']);
+        unset($usuario['ativado']);
+        
+        /**
+         * futuramente colocar pra carregar todas as historias_mini que o usu
+         * ario possuir.
+         */
+        return $usuario;
+    }
+    
     public function readMini(int $id)
     {
+        if(is_numeric($id)){
+            $id = (int)$id;
+        }
+        
         $usuario = R::findOne('usuario', 'id = ?', [$id]);
         if($usuario == null){
             return null;

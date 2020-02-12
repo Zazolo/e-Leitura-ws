@@ -22,15 +22,16 @@ class ParagraphRepository extends Repository
     
     public function get(int $id)
     {
-        $usuario = R::findOne('paragrafo', 'id = ?', [$id]);
-        if($usuario == null){
+        $paragrafo = R::findOne('paragrafo', 'id = ?', [$id]);
+
+        if($paragrafo == null){
             return null;
         }
-        $usuario = $usuario->export();
+        $paragrafo = $paragrafo->export();
         $userRepo = new \Domain\User\UserRepository();
-        $usuario['usuario_id'] = $userRepo->readMini($usuario['usuario_id']);
+        $paragrafo['usuario_id'] = $userRepo->readMini((int)$paragrafo['usuario_id']);
         
-        return $usuario;
+        return $paragrafo;
     }
     
     public function remove(int $id):?bool
@@ -45,15 +46,16 @@ class ParagraphRepository extends Repository
     
     public function vote(int $paragraph_id, int $user_id):?bool
     {
-        $vote = R::findOne('usuario_vota_paragrafo', 'usuario_id = ? AND paragrafo_id = ?', [$user_id, $paragraph_id]);
+        $vote = R::findOne('usuariovtparagrafo', 'usuario = ? AND paragrafo = ?', [$user_id, $paragraph_id]);
         
         if($vote == null){
             
-            $new_vote = R::dispense('usuario_possui_paragrafo');
-            $new_vote['usuario_id'] = $user_id;
-            $new_vote['paragrafo_id'] = $paragraph_id;
+            $newvote = R::dispense('usuariovtparagrafo');
             
-            return R::store($new_vote);
+            $newvote->import(['usuario' => $user_id, 'paragrafo' => $paragraph_id]);
+            
+
+            return R::store($newvote);
             
         }
         
@@ -68,7 +70,7 @@ class ParagraphRepository extends Repository
     public function getAllForHistory(int $history_id, int $requester_id = null):?array
     {
         $paragrafos = R::findAll('paragrafo', 'historia_id = ?', [$history_id]);
-        $paragrafos_size = count($paragrafos);
+
         $outputParagrafos = [];
         
         $userRepo = new \Domain\User\UserRepository();
@@ -82,7 +84,7 @@ class ParagraphRepository extends Repository
             $outputParagrafos[$i]['usuario_id'] = $userRepo->readMini($outputParagrafos[$i]['usuario_id']);
 
             if($requester_id != null){
-                $outputParagrafos[$i]['votou'] = $this->UserHasVoted($outputParagrafos[$i]['id'], $history_id);
+                $outputParagrafos[$i]['votou'] = $this->UserHasVoted($outputParagrafos[$i]['id'], $requester_id);
             }
 
             $i++;
@@ -94,7 +96,7 @@ class ParagraphRepository extends Repository
     
     private function UserHasVoted(int $paragraph_id, int $user_id)
     {
-        $vote = R::findOne('usuario_vota_paragrafo', 'paragrafo_id = ? AND usuario_id = ?', [$paragraph_id, $user_id]);
+        $vote = R::findOne('usuariovtparagrafo', 'paragrafo = ? AND usuario = ?', [$paragraph_id, $user_id]);
         if($vote != null){
             return true;
         }
