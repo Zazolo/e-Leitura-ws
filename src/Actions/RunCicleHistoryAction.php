@@ -15,11 +15,11 @@ namespace Actions;
  */
 use Slim\Http\Request;
 use Slim\Http\Response;
-class RankHistoryAction extends ActionsImplementation implements ActionClass
+class RunCicleHistoryAction extends ActionsImplementation implements ActionClass
 {
     public function __invoke(Request $request, Response $response, array $args)
     {   
-        $responder = new \Responder\FinalizeHistoryResponder($response, $this->service->getHistory($request, $args)->rank());
+        $responder = new \Responder\RunCicleHistoryResponder($response, $this->service->getHistory($request, $args)->runcicle());
         return $responder->resolve();
     }
 }

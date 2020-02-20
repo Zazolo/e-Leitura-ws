@@ -13,7 +13,13 @@ namespace Actions;
  *
  * @author tiago
  */
-class FinalizeHistoryAction
+use Slim\Http\Request;
+use Slim\Http\Response;
+class FinalizeHistoryAction extends ActionsImplementation implements ActionClass
 {
-    //put your code here
+    public function __invoke(Request $request, Response $response, array $args)
+    {   
+        $responder = new \Responder\FinalizeHistoryResponder($response, $this->service->getHistory($request, $args)->finalizar());
+        return $responder->resolve();
+    }
 }

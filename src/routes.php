@@ -16,6 +16,7 @@ use Actions\FinalizeHistoryAction;
 use Actions\RankHistoryAction;
 use Actions\VoteInParagraphAction;
 use Actions\GetParagraphAction;
+use Actions\RunCicleHistoryAction;
 return function (App $app) {
     $container = $app->getContainer();
     
@@ -31,16 +32,15 @@ return function (App $app) {
     $app->delete('/historia/{id:[0-9]+}', DeleteHistoryAction::class);
     $app->get('/historia/{id:[0-9]+}', GetHistoryAction::class);///--->>
     $app->get('/historia/all/', Actions\GetHistoryAvailableAction::class);///--->>
-    
+    $app->put('/historia/{id:[0-9]+}/finalize/', FinalizeHistoryAction::class);///--->>
+    $app->get('/historia/{id:[0-9]+}/rank/', RankHistoryAction::class);///--->>
     
     //Paragrafo
     $app->post('/paragrafo/', CreateParagraphAction::class);
     $app->delete('/paragrafo/{id:[0-9]+}', DeleteParagraphAction::class);
     $app->put('/paragrafo/{id:[0-9]+}/votar/', VoteInParagraphAction::class);
     $app->get('/paragrafo/{id:[0-9]+}', GetParagraphAction::class);///-->
-    /*
-     * Lembrar de fazer o script para rodar no crontab varrendo todas as hisotórias
-     * e verificando quais estão aptas a avançarem de ciclo;
-     */
+    
+    $app->get('/runcicle/', RunCicleHistoryAction::class);///-->
 
 };

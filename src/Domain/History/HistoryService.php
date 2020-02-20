@@ -98,14 +98,32 @@ class HistoryService extends Services
     
     public function finalizar()
     {
+        if(isset($this->args['id']) && $this->requester != null){
+            $HistoryID = $this->args['id'];
+            $requesterID = $this->requester->id;
+            $historia = $this->repository->getIt($HistoryID, $requesterID);
+            if($historia != null){
+                if($historia['usuario_id']['id'] == $this->requester->id){
+                    return $this->repository->finalize($HistoryID);    
+                } 
+            }
+        }
         
     }
     
     public function rank()
     {
-        
+        if(isset($this->args['id'])){
+            return $this->repository->rank($this->args['id']);
+        }
     }
     
+    public function runcicle()
+    {
+        return $this->repository->runcicle();
+    }
+
+
     public function __construct(\Slim\Http\Request $request, array $routeArgs)
     {
         parent::__construct($request, $routeArgs, new HistoryRepository());
