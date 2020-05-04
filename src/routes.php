@@ -30,7 +30,7 @@ return function (App $app) {
     ///Historia
     $app->post('/historia/', CreateHistoryAction::class);
     $app->delete('/historia/{id:[0-9]+}', DeleteHistoryAction::class);
-    $app->get('/historia/{id:[0-9]+}', GetHistoryAction::class);///--->>
+    $app->post('/historia/{id:[0-9]+}', GetHistoryAction::class);///--->>
     $app->get('/historia/all/', Actions\GetHistoryAvailableAction::class);///--->>
     $app->put('/historia/{id:[0-9]+}/finalize/', FinalizeHistoryAction::class);///--->>
     $app->get('/historia/{id:[0-9]+}/rank/', RankHistoryAction::class);///--->>
